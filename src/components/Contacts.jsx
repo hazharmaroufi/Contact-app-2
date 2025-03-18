@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { v4 } from "uuid";
 
 import ContactsList from "./ContactsList";
+import inputs from "../constants /inputs";
 
 function Contacts() {
   const [contacts, setContacts] = useState([]);
   const [alert, setAlert] = useState("");
   const [contact, setContact] = useState({
+    id: "",
     name: "",
     lastName: "",
     email: "",
@@ -26,41 +29,24 @@ function Contacts() {
       setAlert("Please enter a valid data");
       return;
     }
-    setContacts((contacts) => [...contacts, contact]);
-    setContact({ name: "", lastName: "", email: "", phone: "" });
     setAlert("");
+    const newContact = { ...contact, id: v4() };
+    setContacts((contacts) => [...contacts, newContact]);
+    setContact({ name: "", lastName: "", email: "", phone: "" });
   };
   return (
     <div>
       <div>
-        <input
-          type="text"
-          placeholder="name"
-          value={contact.name}
-          onChange={changeHandler}
-          name="name"
-        />
-        <input
-          type="text"
-          placeholder="lastname"
-          value={contact.lastName}
-          onChange={changeHandler}
-          name="lastName"
-        />
-        <input
-          type="email"
-          placeholder="email"
-          value={contact.email}
-          onChange={changeHandler}
-          name="email"
-        />
-        <input
-          type="number"
-          placeholder="phone"
-          value={contact.phone}
-          onChange={changeHandler}
-          name="phone"
-        />
+        {inputs.map((input, index) => (
+          <input
+            key={index}
+            type={input.tyle}
+            placeholder={input.placeholder}
+            value={contact[input.name]}
+            onChange={changeHandler}
+            name={input.name}
+          />
+        ))}
         <button onClick={addHandler}>Add Contant</button>
       </div>
       <div>{alert && <p>{alert}</p>}</div>
