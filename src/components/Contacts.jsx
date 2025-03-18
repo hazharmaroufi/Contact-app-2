@@ -1,6 +1,10 @@
 import { useState } from "react";
 
+import ContactsList from "./ContactsList";
+
 function Contacts() {
+  const [contacts, setContacts] = useState([]);
+  const [alert, setAlert] = useState("");
   const [contact, setContact] = useState({
     name: "",
     lastName: "",
@@ -11,6 +15,20 @@ function Contacts() {
     const name = event.target.name;
     const value = event.target.value;
     setContact((contact) => ({ ...contact, [name]: value }));
+  };
+  const addHandler = () => {
+    if (
+      !contact.name ||
+      !contact.lastName ||
+      !contact.email ||
+      !contact.phone
+    ) {
+      setAlert("Please enter a valid data");
+      return;
+    }
+    setContacts((contacts) => [...contacts, contact]);
+    setContact({ name: "", lastName: "", email: "", phone: "" });
+    setAlert("");
   };
   return (
     <div>
@@ -43,8 +61,10 @@ function Contacts() {
           onChange={changeHandler}
           name="phone"
         />
-        <button>Add Contant</button>
+        <button onClick={addHandler}>Add Contant</button>
       </div>
+      <div>{alert && <p>{alert}</p>}</div>
+      <ContactsList contacts={contacts} />
     </div>
   );
 }
